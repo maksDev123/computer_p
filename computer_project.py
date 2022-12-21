@@ -23,8 +23,16 @@ def task_1(path:str) -> list:
         dicti[n_2].append(n_1)
     return dicti # return dictionary, that represents graph
 
-def task_2():
-    pass
+def task_2(path:str,graph:dict[int, list[int]]):
+    '''
+    Function writes the graph to a file
+    '''
+    with open(path,'w',encoding='utf-8') as file:
+        text = ""
+        for elem in graph:
+            text += f'{elem[0]},{elem[1]}\n'
+        file.write(text.strip())
+    return
 
 def task_3():
     pass
