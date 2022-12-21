@@ -195,7 +195,7 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     for key in graph.keys():
         for elem in graph[key]:
             edge = (key, elem)
-    # A module to prevent circular dependency, like (2,3) and (3,2).        
+    # A module to prevent circular dependency, like (2,3) and (3,2).
             if (elem, key) in edges:
                 continue
             edges.append(edge)
@@ -217,4 +217,3 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
 
 def task_6():
     pass
-doctest.testmod()
