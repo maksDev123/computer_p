@@ -26,8 +26,33 @@ def task_1(path:str) -> list:
 def task_2():
     pass
 
-def task_3():
-    pass
+def task_3(graph: dict[int, list[int]]) -> int:
+    '''
+    Functions finds connectivity components abd returns them as list, where each list
+    represents connectivity component as list of it's nodes
+    >>> connectivity_components({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]}
+    [[1, 2, 3, 4], [9, 10], [11]]
+    '''
+    nodes=list(graph.keys()) #list of nodes
+    visited = [] # visited nodes in DFS
+    glob=[] # list to return
+    def dfs(graph,node):
+        '''
+        DFS function that helps me find all nodes of connectivity node
+        '''
+        if node not in visited:
+            visited.append(node)
+            for new_node in graph[node]:
+                dfs(graph,new_node)
+        return visited
+    while nodes: #while len(nodes) != 0
+        temp=dfs(graph,nodes[0]) # list of nides in exact connectivity component
+        glob.append(list(temp)) # Add connectivity node to list, that will be returned
+        nodes=[i for i in nodes if i not in visited] # Delete all nodes of connectivity/
+                                                     # component from list of all nodes
+        visited.clear() # Clear list of visited nodes
+                        # to prepare it for execution of the breadth-first search function
+    return glob # return result
 
 def task_4(vertices:int, graph: Dict[int, int]) -> List[int]:
     '''
