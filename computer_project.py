@@ -1,6 +1,7 @@
 '''
 Computer project
 '''
+
 import doctest
 from typing import Dict, List
 import copy
@@ -63,7 +64,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
                         # to prepare it for execution of the breadth-first search function
     return glob # return result
 
-def task_4(vertices:int, graph: Dict[int, int]) -> List[int]:
+def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     '''
     Finds and return strongly connected comnonents and returns
     list of integer that represent lowest of vertices for this component
@@ -93,28 +94,28 @@ def task_4(vertices:int, graph: Dict[int, int]) -> List[int]:
     This was made using tarjan algorithm for scc.
     '''
     # Checks whether appropriate input data type
-    if not isinstance(vertices, int) or not isinstance(graph, dict):
+    if not isinstance(n_vertices, int) or not isinstance(graph, dict):
         return
 
     # result is list which contains minimum vertex id of scc
     result = []
 
     # obhid is list which contains position of vertex or -1 if vertex was not visited
-    obhid = [-1] * vertices
+    obhid = [-1] * n_vertices
 
     # low is a list, which contains low-link values of every verrtice
     # or -1 if this vertice was not discovered
-    low = [-1] * vertices
+    low_link = [-1] * n_vertices
 
     # Stack which maintains valid verices for scc
     stack = []
 
 
-    for vertice in range(vertices):
+    for vertice in range(n_vertices):
 
         # If verices was not previously visited than run script recur_scc (dfs)
         if obhid[vertice] == -1:
-            recur_scc(result, obhid, vertice, low, stack, graph)
+            recur_scc(result, obhid, vertice, low_link, stack, graph)
 
     # If all verices are visited than return result
     return result
