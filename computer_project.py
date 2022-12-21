@@ -39,7 +39,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
     '''
     Functions finds connectivity components abd returns them as list, where each list
     represents connectivity component as list of it's nodes
-    >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]}
+    >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]})
     [[1, 2, 3, 4], [9, 10], [11]]
     '''
     nodes=list(graph.keys()) #list of nodes
@@ -175,7 +175,6 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     >>> task_5({1: [2], 2: [1, 3, 5], 3: [2, 4, 6], 4: [3], 5:[2, 6], 6:[3, 5]})
     [(1, 2), (3, 4)]
     >>> task_5({1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]})
-    None
     >>> task_5({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
     [(1, 2), (2, 3), (3, 4), (4, 5)]
     """
@@ -187,7 +186,7 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     for key in graph.keys():
         for elem in graph[key]:
             edge = (key, elem)
-    # A module to prevent circular dependency, like (2,3) and (3,2).        
+    # A module to prevent circular dependency, like (2,3) and (3,2).
             if (elem, key) in edges:
                 continue
             edges.append(edge)
@@ -204,8 +203,55 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     # When graph has no bridges you return None.
     if not bridges:
         return None
-    # Returning the list with bridges. 
+    # Returning the list with bridges.
     return bridges
 
-def task_6():
-    pass
+def task_6(graph: Dict[int, int]) -> List[int]:
+    """
+    Finds connected vertices in a graph, and as a result returns their list
+    If they are missing, then returns None
+
+    Input: graph - graph in the form of as dictionary
+    Output: conect_vertices - list of connection vertices
+
+    >>> task_6({1: [4, 3], 4: [1, 2, 3], 3: [1, 4], 2: [4]})
+    [4]
+    >>> task_6({1: [2], 2: [1, 3, 5], 3: [2, 4, 6], 4: [3], 5:[2, 6], 6:[3, 5]})
+    [2, 3]
+    >>> task_6({1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]})
+    >>> task_6({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
+    [2, 3, 4]
+    """
+
+    #Create a new dictionary in order to store the edited graphs in it
+    new_graph = copy.deepcopy(graph)
+
+    #Create a list in which we will store connection vertices
+    conect_vertices = []
+
+    #Create a variable that will store the number of graph components
+    lentgh_of_graph = len(task_3(graph))
+
+    #Cycle that iterates over dictionary keys (vertices)
+    for key in graph.keys():
+        #Cycle that iterates over key variables and removes a vertex from the graph
+        for elem in graph[key]:
+            new_graph[elem].remove(key)
+        del new_graph[key]
+
+        #If the number of components has changed after removing a vertex,
+        #then we add this vertex to the list
+        if len(task_3(new_graph)) != lentgh_of_graph:
+            conect_vertices.append(key)
+
+        #Return the graph to its former content
+        new_graph = copy.deepcopy(graph)
+
+    #Checks if the list is empty
+    if not conect_vertices:
+        return None
+
+    #Return list of connection vertices
+    return conect_vertices
+
+doctest.testmod()
