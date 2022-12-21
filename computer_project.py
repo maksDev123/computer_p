@@ -3,6 +3,7 @@ Computer project
 '''
 import doctest
 from typing import Dict, List
+import copy
 
 def task_1(path:str) -> list:
     '''
@@ -38,7 +39,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
     '''
     Functions finds connectivity components abd returns them as list, where each list
     represents connectivity component as list of it's nodes
-    >>> connectivity_components({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]}
+    >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]}
     [[1, 2, 3, 4], [9, 10], [11]]
     '''
     nodes=list(graph.keys()) #list of nodes
@@ -161,8 +162,50 @@ def recur_scc(result, obhid, vertice, low, stack, graph):
 
         result.append(min_vertice)
 
-def task_5():
-    pass
+def task_5(graph: Dict[int, int]) -> List[tuple]:
+    """
+    A function that finds the bridges in the graph and returns a list of them.
+    If there are no bridges in the graph, then returns None.
+
+    Input: graph - graph in the form of as dictionary
+    Output: bridges - list of bridges in graph
+
+    >>> task_5({1: [4, 3], 4: [1, 2, 3], 3: [1, 4], 2: [4]})
+    [(4, 2)]
+    >>> task_5({1: [2], 2: [1, 3, 5], 3: [2, 4, 6], 4: [3], 5:[2, 6], 6:[3, 5]})
+    [(1, 2), (3, 4)]
+    >>> task_5({1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]})
+    None
+    >>> task_5({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
+    [(1, 2), (2, 3), (3, 4), (4, 5)]
+    """
+    # Creation the copy of given graph. And creating needed variables
+    new_graph = copy.deepcopy(graph)
+    bridges = []
+    edges = []
+    # For loop iteration for transorming given graph to tuple with edges.
+    for key in graph.keys():
+        for elem in graph[key]:
+            edge = (key, elem)
+    # A module to prevent circular dependency, like (2,3) and (3,2).        
+            if (elem, key) in edges:
+                continue
+            edges.append(edge)
+    # A module to check whether the edge is a bridge or not.
+    for edge in edges:
+    # Removing each edge from graph
+        new_graph[edge[0]].remove(edge[1])
+        new_graph[edge[1]].remove(edge[0])
+    # Checking whether without this component graph is connected.
+        if len(task_3(new_graph)) != 1:
+            bridges.append(edge)
+    # Deepcopying new graph to try an algorithm with a different edge.
+        new_graph = copy.deepcopy(graph)
+    # When graph has no bridges you return None.
+    if not bridges:
+        return None
+    # Returning the list with bridges. 
+    return bridges
 
 def task_6():
     pass
