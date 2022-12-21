@@ -4,9 +4,24 @@ Computer project
 import doctest
 from typing import Dict, List
 
-
-def task_1():
-    pass
+def task_1(path:str) -> list:
+    '''
+    Function reads file by path
+    '''
+    with open(path,'r',encoding='utf-8') as file: # open file
+        lines = file.readlines() # return all lines in the file, as a list
+        lst = [line.strip().split(',') for line in lines] # create list of edges
+    new_lst = [[int(x) for x in inner] for inner in lst] # convert string numbers to int
+    # following code converts a list of edges into a dictionary
+    dicti={}
+    for n_1,n_2 in new_lst:
+        if n_1 not in dicti:
+            dicti[n_1] = []
+        dicti[n_1].append(n_2)
+        if n_2 not in dicti:
+            dicti[n_2] = []
+        dicti[n_2].append(n_1)
+    return dicti # return dictionary, that represents graph
 
 def task_2():
     pass
