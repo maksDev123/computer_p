@@ -40,7 +40,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
     '''
     Functions finds connectivity components abd returns them as list, where each list
     represents connectivity component as list of it's nodes
-    >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]}
+    >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]})
     [[1, 2, 3, 4], [9, 10], [11]]
     '''
     nodes=list(graph.keys()) #list of nodes
@@ -93,6 +93,8 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
 
     This was made using tarjan algorithm for scc.
     '''
+    # Initialize index (id)
+    index = 0
     # Checks whether appropriate input data type
     if not isinstance(n_vertices, int) or not isinstance(graph, dict):
         return
@@ -100,8 +102,8 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     # result is list which contains minimum vertex id of scc
     result = []
 
-    # obhid is list which contains position of vertex or -1 if vertex was not visited
-    obhid = [-1] * n_vertices
+    # traversal is list which contains position of vertex or -1 if vertex was not visited
+    traversal = [-1] * n_vertices
 
     # low is a list, which contains low-link values of every verrtice
     # or -1 if this vertice was not discovered
@@ -114,20 +116,25 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     for vertice in range(n_vertices):
 
         # If verices was not previously visited than run script recur_scc (dfs)
-        if obhid[vertice] == -1:
-            recur_scc(result, obhid, vertice, low_link, stack, graph)
+        if traversal[vertice] == -1:
+            index = recur_scc(index, result, traversal, vertice, low_link, stack, graph)
 
     # If all verices are visited than return result
     return result
 
-def recur_scc(result, obhid, vertice, low, stack, graph):
+def recur_scc(index, result, traversal, vertice, low, stack, graph):
     '''
     Dfs based function for recursion to determine minimum vertex id of scc
     '''
-    # Adding id to obhid
-    obhid[vertice] =  len(stack)
+    # Adding id to traversal
+    traversal[vertice] = index
+
     # Initializing low-link value of vertice
-    low[vertice] = len(stack)
+    low[vertice] = index
+
+    # Adding one to id
+    index += 1
+
     # Adding vertice to stack of valid vertices
     stack.append(vertice)
 
@@ -138,8 +145,8 @@ def recur_scc(result, obhid, vertice, low, stack, graph):
 
             # If next vertice is not visited than we will visit
             # it and take minimum of low-link values
-            if len(obhid) > adjacent and obhid[adjacent] == -1:
-                recur_scc(result, obhid, adjacent, low, stack, graph)
+            if len(traversal) > adjacent and traversal[adjacent] == -1:
+                index = recur_scc(index, result, traversal, adjacent, low, stack, graph)
                 low[vertice] = min(low[vertice], low[adjacent])
 
             # If next vertice is in stack than we take minimum
@@ -151,7 +158,7 @@ def recur_scc(result, obhid, vertice, low, stack, graph):
 
     # If vertice is head of subgraph we take all vertices
     # before it in stack and take minimum of them
-    if low[vertice] == obhid[vertice]:
+    if low[vertice] == traversal[vertice]:
 
         ver = stack.pop()
         min_vertice = ver
@@ -162,6 +169,7 @@ def recur_scc(result, obhid, vertice, low, stack, graph):
                 min_vertice = ver
 
         result.append(min_vertice)
+    return index
 
 def task_5(graph: Dict[int, int]) -> List[tuple]:
     """
@@ -176,7 +184,6 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     >>> task_5({1: [2], 2: [1, 3, 5], 3: [2, 4, 6], 4: [3], 5:[2, 6], 6:[3, 5]})
     [(1, 2), (3, 4)]
     >>> task_5({1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]})
-    None
     >>> task_5({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
     [(1, 2), (2, 3), (3, 4), (4, 5)]
     """
@@ -205,8 +212,9 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     # When graph has no bridges you return None.
     if not bridges:
         return None
-    # Returning the list with bridges. 
+    # Returning the list with bridges.
     return bridges
 
 def task_6():
     pass
+doctest.testmod()
