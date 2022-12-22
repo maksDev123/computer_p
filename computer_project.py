@@ -6,34 +6,67 @@ import doctest
 from typing import Dict, List
 import copy
 
-def task_1(path:str) -> list:
+def task_1(path:str, directed:bool = False) -> dict[int, list[int]]:
     '''
     Function reads file by path
+    If directed is True than graph will be read taking into account direction of edges.
+    If directed is False than reading won't take into account direction of edges.
+
+    Input:
+    path - path to file,
+    directed - whether graph is directed or not.
+
+    Output:
+    graph - dictionary of connectivity
     '''
+    if directed is None:
+        directed = False
     with open(path,'r',encoding='utf-8') as file: # open file
         lines = file.readlines() # return all lines in the file, as a list
         lst = [line.strip().split(',') for line in lines] # create list of edges
     new_lst = [[int(x) for x in inner] for inner in lst] # convert string numbers to int
     # following code converts a list of edges into a dictionary
     dicti={}
-    for n_1,n_2 in new_lst:
-        if n_1 not in dicti:
-            dicti[n_1] = []
-        dicti[n_1].append(n_2)
-        if n_2 not in dicti:
-            dicti[n_2] = []
-        dicti[n_2].append(n_1)
+    if directed is False:
+        for n_1,n_2 in new_lst:
+            if n_1 not in dicti:
+                dicti[n_1] = []
+            dicti[n_1].append(n_2)
+            if n_2 not in dicti:
+                dicti[n_2] = []
+            dicti[n_2].append(n_1)
+    if directed is True:
+        for n_1,n_2 in new_lst:
+            if n_1 not in dicti:
+                dicti[n_1] = []
+            dicti[n_1].append(n_2)
     return dicti # return dictionary, that represents graph
 
-def task_2(path:str,graph:dict[int, list[int]]):
+def task_2(path:str, graph:dict[int, list[int]], directed:bool = False) -> None:
     '''
-    Function writes the graph to a file
+    Function writes the graph to a file given as dictionary of connectivity
+    If directed is True than graph will be written taking into account direction of edges.
+    If directed is False than writing won't take into account direction of edges.
+
+    Input:
+    path - path to file,
+    graph - dictionary of connectivity,
+    directed - whether graph is directed or not.
+
+    Output:
+    None
     '''
+    edges = []
     with open(path,'w',encoding='utf-8') as file:
-        text = ""
-        for elem in graph:
-            text += f'{elem[0]},{elem[1]}\n'
-        file.write(text.strip())
+
+        for vertice_1 in graph:
+            for vertice_2 in graph[vertice_1]:
+                if directed is False and f"{vertice_2},{vertice_1}\n" not in edges:
+                    edges.append(f'{vertice_1},{vertice_2}\n')
+                elif directed is True:
+                    edges.append(f'{vertice_1},{vertice_2}\n')
+
+        file.write("".join(edges))
     return
 
 def task_3(graph: dict[int, list[int]]) -> int:
@@ -215,5 +248,50 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     # Returning the list with bridges.
     return bridges
 
-def task_6():
-    pass
+def task_6(graph: Dict[int, int]) -> List[int]:
+    """
+    Finds connected vertices in a graph, and as a result returns their list
+    If they are missing, then returns None
+    Input: graph - graph in the form of as dictionary
+    Output: conect_vertices - list of connection vertices
+    >>> task_6({1: [4, 3], 4: [1, 2, 3], 3: [1, 4], 2: [4]})
+    [4]
+    >>> task_6({1: [2], 2: [1, 3, 5], 3: [2, 4, 6], 4: [3], 5:[2, 6], 6:[3, 5]})
+    [2, 3]
+    >>> task_6({1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]})
+    >>> task_6({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
+    [2, 3, 4]
+    """
+
+    #Create a new dictionary in order to store the edited graphs in it
+    new_graph = copy.deepcopy(graph)
+
+    #Create a list in which we will store connection vertices
+    conect_vertices = []
+
+    #Create a variable that will store the number of graph components
+    lentgh_of_graph = len(task_3(graph))
+
+    #Cycle that iterates over dictionary keys (vertices)
+    for key in graph.keys():
+        #Cycle that iterates over key variables and removes a vertex from the graph
+        for elem in graph[key]:
+            new_graph[elem].remove(key)
+        del new_graph[key]
+
+        #If the number of components has changed after removing a vertex,
+        #then we add this vertex to the list
+        if len(task_3(new_graph)) != lentgh_of_graph:
+            conect_vertices.append(key)
+
+        #Return the graph to its former content
+        new_graph = copy.deepcopy(graph)
+
+    #Checks if the list is empty
+    if not conect_vertices:
+        return None
+
+    #Return list of connection vertices
+    return conect_vertices
+
+doctest.testmod()
