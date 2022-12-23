@@ -74,7 +74,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
     Functions finds connectivity components abd returns them as list, where each list
     represents connectivity component as list of it's nodes
     >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]})
-    [[1, 2, 3, 4], [9, 10], [11]]
+    [1, 9, 11]
     '''
     nodes=list(graph.keys()) #list of nodes
     visited = [] # visited nodes in DFS
@@ -95,7 +95,7 @@ def task_3(graph: dict[int, list[int]]) -> int:
                                                      # component from list of all nodes
         visited.clear() # Clear list of visited nodes
                         # to prepare it for execution of the breadth-first search function
-    return glob # return result
+    return [min(i) for i in glob] # return result
 
 def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     '''
