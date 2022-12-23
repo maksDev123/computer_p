@@ -142,7 +142,7 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     # or -1 if this vertice was not discovered
     low_link = [-1] * n_vertices
 
-    # Stack which maintains valid verices for scc
+    # Stack which maintains valid vertices for scc
     stack = []
 
 
@@ -185,14 +185,12 @@ def recur_scc(index, result, traversal, vertice, low, stack, graph):
             # If next vertice is in stack than we take minimum
             # of low link value of current vertice and id of adjacent vertice
             elif adjacent in stack:
-                # Takes minimum of low link and id (not low-link and low-link)
-                # because i
+                # Takes minimum of low link of current vertice and adjacent one 
                 low[vertice] = min(low[vertice], low[adjacent])
 
     # If vertice is head of subgraph we take all vertices
     # before it in stack and take minimum of them
     if low[vertice] == traversal[vertice]:
-
         ver = stack.pop()
         min_vertice = ver
         while ver != vertice:
