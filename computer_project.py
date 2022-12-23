@@ -75,7 +75,13 @@ def task_3(graph: dict[int, list[int]]) -> int:
     represents connectivity component as list of it's nodes
     >>> task_3({1: [2, 4, 3], 2: [1, 3], 3: [2, 1], 4: [1],9:[10],10:[9],11:[]})
     [1, 9, 11]
+    >>> task_3([2, 5, 3])
+    'Graph must be a dictionary'
     '''
+    # Checks whether appropriate type is passed
+    if not isinstance(graph, dict):
+        return "Graph must be a dictionary"
+
     nodes=list(graph.keys()) #list of nodes
     visited = [] # visited nodes in DFS
     glob=[] # list to return
@@ -107,7 +113,9 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     Output: list of lowest id of every scc
 
     >>> task_4("a", {1: [2], 2: [1]})
+    'Unappropriate types'
     >>> task_4(2, [0, 1])
+    'Unappropriate types'
     >>> task_4(5 ,{1: [0], 0: [2, 3], 2: [1], 3: [4]})
     [4, 3, 0]
     >>> task_4(4 ,{0: [1], 1: [2], 2: [3]})
@@ -130,7 +138,7 @@ def task_4(n_vertices:int, graph: Dict[int, int]) -> List[int]:
     index = 0
     # Checks whether appropriate input data type
     if not isinstance(n_vertices, int) or not isinstance(graph, dict):
-        return
+        return "Unappropriate types"
 
     # result is list which contains minimum vertex id of scc
     result = []
@@ -218,6 +226,9 @@ def task_5(graph: Dict[int, int]) -> List[tuple]:
     >>> task_5({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
     [(1, 2), (2, 3), (3, 4), (4, 5)]
     """
+    # Checks whether appropriate type is passed
+    if not isinstance(graph, dict):
+        return "Graph must be a dictionary"
     # Creation the copy of given graph. And creating needed variables
     new_graph = copy.deepcopy(graph)
     bridges = []
@@ -260,6 +271,9 @@ def task_6(graph: Dict[int, int]) -> List[int]:
     >>> task_6({1: [2], 2: [1, 3], 3: [2, 4], 4: [3, 5], 5: [4]})
     [2, 3, 4]
     """
+    # Checks whether appropriate type is passed
+    if not isinstance(graph, dict):
+        return "Graph must be a dictionary"
 
     #Create a new dictionary in order to store the edited graphs in it
     new_graph = copy.deepcopy(graph)
