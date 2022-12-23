@@ -185,7 +185,7 @@ def recur_scc(index, result, traversal, vertice, low, stack, graph):
             # If next vertice is in stack than we take minimum
             # of low link value of current vertice and id of adjacent vertice
             elif adjacent in stack:
-                # Takes minimum of low link of current vertice and adjacent one 
+                # Takes minimum of low link of current vertice and adjacent one
                 low[vertice] = min(low[vertice], low[adjacent])
 
     # If vertice is head of subgraph we take all vertices
